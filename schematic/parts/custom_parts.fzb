@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module fritzingVersion="0.9.9b.2021-09-22.CD-348-0-f0af53a9" icon="Mine.png">
+    <title>My Parts</title>
+    <instances>
+        <instance moduleIdRef="ESP8266 NodeMCU LoLin module_4ac350af3ac2fef357e535cbb2c0db8c_1" modelIndex="1847497" path="C:/Users/jeiem/Documents/Fritzing/parts/user/ESP8266 NodeMCU LoLin module_4ac350af3ac2fef357e535cbb2c0db8c_1.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="richardbruneau00000_9d7b159e5644c6d05d1c16bcdd72bef2_9" modelIndex="1847498" path="C:/Users/jeiem/Documents/Fritzing/parts/user/richardbruneau00000_9d7b159e5644c6d05d1c16bcdd72bef2_9.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="richardbruneau00000_3ce74d9234c049105c21cf655ddef8e7_6" modelIndex="1847499" path="C:/Users/jeiem/Documents/Fritzing/parts/user/richardbruneau00000_3ce74d9234c049105c21cf655ddef8e7_6.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="KY-015_11d1a62778862d9c41cfc682e035094c_2" modelIndex="1847522" path="C:/Users/jeiem/Documents/Fritzing/parts/user/KY-015_11d1a62778862d9c41cfc682e035094c_2.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="richardbruneau00000_1596f9e02c5d10f675af8bee0102edcc_11" modelIndex="1847527" path="C:/Users/jeiem/Documents/Fritzing/parts/user/richardbruneau00000_1596f9e02c5d10f675af8bee0102edcc_11.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="prefix0000_642e08dceb3d1de4c31ea2bcfb635c6f_1" modelIndex="1849020" path="C:/Program Files/Fritzing/fritzing-parts/core/DFRobot-PH-sensor.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="richardbruneau00_76cd9df1630dc78d47c79299cf626667_13" modelIndex="1849370" path="C:/Users/jeiem/Documents/Fritzing/parts/user/richardbruneau00_76cd9df1630dc78d47c79299cf626667_13.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="custom_light_bulb sm_2096488ac1dd3d5806b57796bb266aa9_5" modelIndex="1855799" path="C:/Users/jeiem/Documents/Fritzing/parts/user/custom_light_bulb sm_2096488ac1dd3d5806b57796bb266aa9_5.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="small_fan_84fe1d5c-a82d-11ea-8205-7347426e624_7" modelIndex="1855804" path="C:/Users/jeiem/Documents/Fritzing/parts/user/small_fan_84fe1d5c-a82d-11ea-8205-7347426e624_7.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="prefix0000_ee50e469185ecdd213bc4667263c7a71_1" modelIndex="1855852" path="C:/Users/jeiem/Documents/Fritzing/parts/user/prefix0000_ee50e469185ecdd213bc4667263c7a71_1.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="LCD2004-I2C" modelIndex="1864267" path="C:/Users/jeiem/Documents/Fritzing/parts/user/LCD2004-I2C.fzp" flippedSMD="true">
+            <property name="flippedSMD" value="true"/>
+            <views/>
+        </instance>
+        <instance moduleIdRef="zmpt101b_1" modelIndex="1864508" path="C:/Users/jeiem/Documents/Fritzing/parts/user/zmpt101b_1.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="ACS712 Current Sensor 5A 20A 30A_ee2f0feeaa9a341f18d471f9decff494_4" modelIndex="1864520" path="C:/Users/jeiem/Documents/Fritzing/parts/user/ACS712 Current Sensor 5A 20A 30A_ee2f0feeaa9a341f18d471f9decff494_4.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="OLED Display I2C 128x64_161aaf50af25f49b6ca45bf76e726a23_3" modelIndex="1864525" path="C:/Users/jeiem/Documents/Fritzing/parts/user/OLED Display I2C 128x64_161aaf50af25f49b6ca45bf76e726a23_3.fzp">
+            <views/>
+        </instance>
+        <instance moduleIdRef="prefix0000_44c18482c10994f0854eec4924c76618_1" modelIndex="1864535" path="C:/Users/jeiem/Documents/Fritzing/parts/user/prefix0000_44c18482c10994f0854eec4924c76618_1.fzp">
+            <views/>
+        </instance>
+    </instances>
+</module>
