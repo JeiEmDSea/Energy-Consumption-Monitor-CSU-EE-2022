@@ -5,6 +5,7 @@
 #include "Sim800L.h"
 #include "SoftwareSerial.h"
 #include "SdFat.h"
+#include "ArduinoJson.h"
 
 #define VOLTAGE_SENSOR_PIN A0
 #define CURRENT_SENSOR_PIN A1
@@ -25,6 +26,7 @@ DS3231 rtc(SDA, SCL);
 SdFat sdCard;
 SdFile sdFile;
 Sim800L gsm(RX, TX);
+SoftwareSerial dataPlotter(2, 3);
 
 void setup()
 {
@@ -44,9 +46,17 @@ void loop()
   calculateValues();
   showValuesToLCD();
   saveDataToSDcard();
-  sendData(17, 0); // ? every 5:00PM
+  sendDataToUser(17, 0); // ? every 5:00PM
 
   delay(1000);
+}
+
+void sendDataToPlotter()
+{
+  StaticJsonDocument<100> sensorData;
+
+  sensorData["energy_kWh"] = energy_kWh;
+  dataPlotter.print(sensorData.as<String>());
 }
 
 void calculateValues()
@@ -146,7 +156,7 @@ void loadCurrentConsumption()
   }
 }
 
-void sendData(int hr, int min)
+void sendDataToUser(int hr, int min)
 {
   if (rtc.getTime().hour == hr && rtc.getTime().min == min && rtc.getTime().sec == 0)
   // ! if (rtc.getTime().min % 10 == 0) // ? every 10 minutes
