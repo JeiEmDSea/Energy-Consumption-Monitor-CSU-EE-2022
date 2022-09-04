@@ -11,8 +11,8 @@
 
 #define VOLTAGE_SENSOR_PIN A0
 #define CURRENT_SENSOR_PIN A1
-#define RX 6
-#define TX 5
+#define RX 10
+#define TX 11
 
 const float vCal = 700;
 const float iCal = 5; // ? 5.405 -> ACS712|5A|185mV/A -> https://community.openenergymonitor.org/t/emonlib-at-no-load-doesnt-give-zero-current-readings/3986#:~:text=I%20used%20current%20callibration%20at%205.405%20because%20ACS712%20has%20185mV/A%20and%20from%20the%20openenergy%20I%20found%20that%20for%20a%20voltage%20type%20sensor%20Current/VOltage%20will%20give%20the%20current%20callibration%20constant.
@@ -20,7 +20,8 @@ const float iCal = 5; // ? 5.405 -> ACS712|5A|185mV/A -> https://community.opene
 double energy_kWh = 0;
 double pricePerkWh = 10;
 
-char num[] = "+639355276219";
+String number = "+639355276219";
+String codeMessage = "#monitor";
 
 bool redrawGraph = true;
 double ox, oy;
@@ -35,7 +36,7 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 DS3231 rtc(SDA, SCL);
 SdFat sdCard;
 SdFile sdFile;
-Sim800L gsm(RX, TX);
+SoftwareSerial gsm(RX, TX);
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, SCL, SDA);
 
 void setup()
@@ -46,7 +47,7 @@ void setup()
   initLCD();
   initSDcard();
   rtc.begin();
-  gsm.begin(9600);
+  initGSM();
   u8g2.begin();
   u8g2.setFont(u8g2_font_ncenB08_tr);
 
@@ -59,7 +60,6 @@ void loop()
   calculateValues();
   showValuesToLCD();
   saveDataToSDcard();
-  // sendData(17, 0); // ? every 5:00PM
 
   drawGraph(
       x++,                   // second
@@ -84,7 +84,11 @@ void loop()
     redrawGraph = true;
   }
 
-  delay(1000);
+  delay(500);
+
+  parseMessages();
+
+  delay(500);
 }
 
 void calculateValues()
@@ -184,18 +188,65 @@ void loadCurrentConsumption()
   }
 }
 
-void sendData(int hr, int min)
+void parseMessages()
 {
-  if (rtc.getTime().hour == hr && rtc.getTime().min == min && rtc.getTime().sec == 0)
-  // if (rtc.getTime().min % 10 == 0) // ? every 10 minutes
+  String message = "";
+
+  while (gsm.available() > 0)
   {
+    char ch = (char)gsm.read();
+    message += ch;
+
+    if (!message.startsWith("#"))
+    {
+      message = "";
+    }
+  }
+
+  message.trim();
+
+  if (message.length() > 0)
+  {
+    Serial.println(message);
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Sending data");
-    String message = String("Your energy consumption is P" + String(energy_kWh * pricePerkWh, 1));
-    gsm.sendSms(num, message.c_str());
-    delay(5000);
+    lcd.print("Message: " + message);
+    delay(2000);
+
+    if (message == codeMessage)
+    {
+      double foreCast = ((energy_kWh * pricePerkWh) / rtc.getTime().hour) * 24;
+      String data = String("total mWh: " + String(energy_kWh * 1000, 1) + "\ncurrent price: P" + String(energy_kWh * pricePerkWh, 2) + "\nfuture price: P" + String(foreCast, 2));
+      sendMessage(data);
+    }
   }
+}
+
+void sendMessage(String mess)
+{
+  gsm.println("AT+CMGS=\"" + number + "\"\r");
+  delay(200);
+  gsm.println(mess);
+  delay(100);
+  gsm.println((char)26); // ? ASCII code of CTRL+Z
+  delay(200);
+}
+
+void initGSM()
+{
+  gsm.begin(9600);
+  delay(1000);
+
+  gsm.println("AT+CMGF=1");
+  delay(200);
+  gsm.println("AT+CNMI=1,2,0,0,0");
+  delay(200);
+
+  sendMessage("GSM Initialized");
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("GSM Initialized");
 }
 
 void initLCD()
