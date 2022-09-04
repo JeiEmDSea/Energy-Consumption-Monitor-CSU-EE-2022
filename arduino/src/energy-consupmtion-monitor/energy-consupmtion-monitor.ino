@@ -19,14 +19,14 @@ const float iCal = 5; // ? 5.405 -> ACS712|5A|185mV/A -> https://community.opene
 double energy_kWh = 0;
 double pricePerkWh = 10;
 
-String number = "+639355276219";
+String number = "+639350315198";
 String codeMessage = "#monitor";
 
 bool redrawGraph = true;
 double ox, oy;
 double lastReading = 0;
-double yLength = 15;
-double x = 0;
+double yLength = 40;
+int x = 1;
 double xLength = 60;
 double xInterval = 20;
 
@@ -59,34 +59,9 @@ void loop()
   calculateValues();
   showValuesToLCD();
   saveDataToSDcard();
-
-  drawGraph(
-      x++,                   // second
-      energy_kWh * 1000,     // consumption
-      30,                    // x origin
-      50,                    // y origin
-      75,                    // graph width
-      30,                    // graph height
-      0,                     // start second
-      xLength,               // end second
-      xInterval,             // x-axis division
-      lastReading,           // y-axis lower bound
-      lastReading + yLength, // y-axis upper bound
-      lastReading + yLength, // y-axis division
-      0,
-      redrawGraph);
-
-  if (x == xLength)
-  {
-    x = 0;
-    lastReading = energy_kWh * 1000;
-    redrawGraph = true;
-  }
-
+  showGraphToOLED();
   delay(500);
-
   parseMessages();
-
   delay(500);
 }
 
@@ -119,18 +94,59 @@ void showValuesToLCD()
   lcd.setCursor(10, 1);
   lcd.print("C:P" + String(energy_kWh * pricePerkWh, 2));
 
-  double foreCast = ((energy_kWh * pricePerkWh) / rtc.getTime().hour) * 24;
+  double foreCast = ((energy_kWh * pricePerkWh) / rtc.getTime().hour) * 24 * 30;
   lcd.setCursor(10, 2);
   lcd.print("F:P" + String(foreCast, 2));
 
   lcd.setCursor(0, 3);
-  lcd.print("T:" + String(rtc.getTimeStr()));
+  String date = rtc.getDateStr();
+  lcd.print("T:" + String(rtc.getTimeStr()) + " " + rtc.getMonthStr(1) + " " + date.substring(6));
+}
+
+void showGraphToOLED()
+{
+  String timeStr = rtc.getTimeStr();
+  String secStr = timeStr.substring(6);
+
+  if (secStr.toInt() == 0)
+  {
+    x = 60;
+  }
+  else
+  {
+    x = secStr.toInt();
+  }
+
+  drawGraph(
+      x,                     // second
+      energy_kWh * 1000,     // consumption
+      30,                    // x origin
+      50,                    // y origin
+      75,                    // graph width
+      30,                    // graph height
+      0,                     // start second
+      xLength,               // end second
+      xInterval,             // x-axis division
+      lastReading,           // y-axis lower bound
+      lastReading + yLength, // y-axis upper bound
+      yLength,               // y-axis division
+      0,
+      redrawGraph);
+
+  if (x == xLength)
+  {
+    lastReading = energy_kWh * 1000;
+    redrawGraph = true;
+  }
 }
 
 void saveDataToSDcard()
 {
-  String logFile = String(String(rtc.getDateStr()) + ".log.txt");
-  String consumptionFile = String(String(rtc.getDateStr()) + ".consumption.txt");
+  String date = rtc.getDateStr();
+  String monthYear = date.substring(3);
+
+  String logFile = String(monthYear + ".log.txt");
+  String consumptionFile = String(monthYear + ".consumption.txt");
 
   if (sdFile.open(logFile.c_str(), O_CREAT | O_WRITE | O_APPEND))
   {
@@ -171,7 +187,10 @@ void saveDataToSDcard()
 
 void loadCurrentConsumption()
 {
-  String consumptionFile = String(String(rtc.getDateStr()) + ".consumption.txt");
+  String date = rtc.getDateStr();
+  String monthYear = date.substring(3);
+
+  String consumptionFile = String(monthYear + ".consumption.txt");
 
   if (sdFile.open(consumptionFile.c_str(), O_READ))
   {
@@ -214,7 +233,7 @@ void parseMessages()
 
     if (message == codeMessage)
     {
-      double foreCast = ((energy_kWh * pricePerkWh) / rtc.getTime().hour) * 24;
+      double foreCast = ((energy_kWh * pricePerkWh) / rtc.getTime().hour) * 24 * 30;
       String data = String("total mWh: " + String(energy_kWh * 1000, 1) + "\ncurrent price: P" + String(energy_kWh * pricePerkWh, 2) + "\nfuture price: P" + String(foreCast, 2));
       sendMessage(data);
     }
