@@ -2,7 +2,6 @@
 #include "LiquidCrystal_I2C.h"
 #include "DS3231.h"
 #include "SPI.h"
-#include "Sim800L.h"
 #include "SoftwareSerial.h"
 #include "SdFat.h"
 #include "Arduino.h"
